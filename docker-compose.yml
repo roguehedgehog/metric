@@ -1,0 +1,41 @@
+version: "3.9"
+services:
+  app:
+    depends_on:
+        - db
+        - migrations
+    build: ./app/.
+    ports:
+      - "13371:8080"
+    
+  db:
+    image: mysql:8.0
+    ports:
+      - "13372:3306"
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_ROOT_USER
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_USER
+      - MYSQL_PASSWORD    
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p", "${MYSQL_ROOT_PASSWORD}"]
+      timeout: 20s
+      retries: 5
+  migrations:
+    depends_on:
+      - db
+    image: flyway/flyway:9.10
+    environment:
+      - FLYWAY_USER=${MYSQL_USER}
+      - FLYWAY_PASSWORD=${MYSQL_PASSWORD}
+      - FLYWAY_URL=jdbc:mysql://db:3306/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true
+      - FLYWAY_SCHEMAS=${MYSQL_DATABASE}
+      - FLYWAY_GROUP=true
+    volumes:
+      - ./deploy/db/migrations:/flyway/migrations
+    command: -locations=filesystem:/flyway/migrations -connectRetries=60 migrate
+
+
+
+    
