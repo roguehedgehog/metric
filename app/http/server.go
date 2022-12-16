@@ -2,9 +2,8 @@ package http
 
 import (
 	"fmt"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type Server struct {
@@ -22,7 +21,13 @@ func NewServer(port int) Server {
 func NewRouter() *gin.Engine {
 	r := gin.Default()
 	r.GET("/health", func(c *gin.Context) {
-		c.String(http.StatusOK, "I'm alive")
+		app := HealthCheck()
+		if app.isHealthy() {
+			c.JSON(http.StatusOK, app)
+			return
+		}
+
+		c.JSON(http.StatusServiceUnavailable, app)
 	})
 
 	return r
