@@ -15,6 +15,7 @@
 
 !Makefile
 !env.dist
+!.test.env
 
 !/deploy/db/init.sql
 !/deploy/db/migrations/*.sql

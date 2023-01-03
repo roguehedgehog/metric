@@ -1,6 +1,8 @@
 package http
 
-import database "github.com/roguehedgehog/metric/infra"
+import (
+	database "github.com/roguehedgehog/metric/infra"
+)
 
 type Health struct {
 	App bool
