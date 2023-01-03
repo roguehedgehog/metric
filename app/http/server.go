@@ -29,6 +29,7 @@ func NewRouter() *gin.Engine {
 
 		c.JSON(http.StatusServiceUnavailable, app)
 	})
+	r.POST("/users", newUser)
 
 	return r
 
