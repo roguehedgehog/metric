@@ -21,5 +21,22 @@ type ExistsError struct {
 }
 
 func (e ExistsError) Error() string {
-	return fmt.Sprintf("user with username %s exists", e.Username)
+	return fmt.Sprintf("user with Username %s exists", e.Username)
+}
+
+type NotFoundError struct {
+	Username string
+}
+
+func (e NotFoundError) Error() string {
+	return fmt.Sprintf("User %s not found", e.Username)
+}
+
+type NotAuthorisedError struct {
+	Username string
+	Action   string
+}
+
+func (e NotAuthorisedError) Error() string {
+	return fmt.Sprintf("User %s is not authorised to %s", e.Username, e.Action)
 }

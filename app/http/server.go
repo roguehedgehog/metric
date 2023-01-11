@@ -2,6 +2,7 @@ package http
 
 import (
 	"fmt"
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -29,7 +30,11 @@ func NewRouter() *gin.Engine {
 
 		c.JSON(http.StatusServiceUnavailable, app)
 	})
+
 	r.POST("/users", newUser)
+	r.POST("/login", login)
+	r.POST("/logout", logout)
+	r.GET("/account", account)
 
 	return r
 
@@ -37,4 +42,12 @@ func NewRouter() *gin.Engine {
 
 func (s *Server) Start() {
 	s.router.Run(fmt.Sprintf(":%d", s.port))
+}
+func initSession(r *gin.Engine) {
+
+	r.Use(sessions.Sessions("mysession", sessions.NewCookieStore(secret)))
+
+}
+func authRequired() {
+
 }

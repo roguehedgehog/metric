@@ -8,7 +8,9 @@ start.env.test:
 	docker compose --env-file .test.env up -d
 
 serve:
-	export $$(cat .env | xargs) && cd ./app && go run . serve
+	export $$(cat .env | xargs) \
+	&& ./wait-for-it.sh localhost:$${MYSQL_PORT} -- echo "database is running" \
+	&& cd ./app && go run . serve
 
 migrate:
 	docker compose up migrations
@@ -17,5 +19,8 @@ test.unit:
 	cd ./app && METRIC_DB_DISABLED=1 go test ./...
 
 test.integration: start.env.test
-	export $$(cat .test.env | xargs) && cd ./app && go test --tags=integration.test ./...
+	export $$(cat .test.env | xargs) \
+	&& ./wait-for-it.sh localhost:$${MYSQL_PORT} \
+	&& cd ./app \
+	&& go test --tags=integration.test ./...
 	docker compose stop

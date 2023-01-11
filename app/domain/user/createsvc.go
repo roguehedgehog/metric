@@ -1,17 +1,17 @@
 package user
 
 type CreateSvc struct {
-	userRepo Repo
+	users Repo
 }
 
 func NewCreateSvc(userRepo Repo) *CreateSvc {
-	return &CreateSvc{userRepo: userRepo}
+	return &CreateSvc{users: userRepo}
 }
 
 func (srv *CreateSvc) Create(username, password string) error {
-	if srv.userRepo.Exists(username) {
+	if srv.users.Exists(username) {
 		return ExistsError{Username: username}
 	}
-	_, err := srv.userRepo.Create(username, password)
+	_, err := srv.users.Create(username, password)
 	return err
 }

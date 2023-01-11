@@ -27,6 +27,10 @@ services:
     volumes:
       - ./deploy/db/migrations:/flyway/migrations
     command: -locations=filesystem:/flyway/migrations -connectRetries=60 migrate
+  cache:
+    image: redis:latest
+    ports:
+      - "${REDIS_PORT}:6379"
 
 
 
